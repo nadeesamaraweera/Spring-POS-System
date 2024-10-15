@@ -20,7 +20,7 @@ public class CustomerEntity implements SuperEntity {
     private String name;
     private String address;
     @Column(unique = true)
-    private String mobile;
+    private String contact;
     @Column(columnDefinition = "LONGTEXT")
     private String profilePic;
     @OneToMany(mappedBy = "customer")
