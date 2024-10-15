@@ -45,4 +45,13 @@ public class CustomerServiceIMPL implements CustomerService {
             customerDAO.save(tmpCustomer.get());
         }
     }
+    @Override
+    public void deleteCustomer(String customerId) {
+        Optional<CustomerEntity> selectedCustomerId = customerDAO.findById(customerId);
+        if (!selectedCustomerId.isPresent()) {
+            throw new CustomerNotFoundException("Customer not found");
+        } else {
+            customerDAO.deleteById(customerId);
+        }
+    }
 }
