@@ -83,7 +83,7 @@ public class CustomerServiceIMPL implements CustomerService {
             return mapping.convertToCUstomerDTO(customerDAO.getReferenceById(customerId));
         }else {
             logger.warn("Customer not found with ID: {}", customerId);
-            return new CustomerErrorResponse(0,"Customer not found");
+            return new CustomerErrorResponse("0","Customer not found");
         }
     }
     @Override
