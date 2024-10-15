@@ -4,13 +4,14 @@ import lk.ijse.springpossystem.dto.CustomerDTO;
 import lk.ijse.springpossystem.dto.ItemDTO;
 import lk.ijse.springpossystem.entity.CustomerEntity;
 import lk.ijse.springpossystem.entity.ItemEntity;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@RequiredArgsConstructor
 @Component
 public class Mapping {
     @Autowired

@@ -11,7 +11,7 @@ public class AppUtil {
         return Base64.getEncoder().encodeToString(profilePic);
     }
 
-    public static String createItemId(){
+    public static String createItemCode(){
         return "ITEM-"+ UUID.randomUUID();
     }
 }
