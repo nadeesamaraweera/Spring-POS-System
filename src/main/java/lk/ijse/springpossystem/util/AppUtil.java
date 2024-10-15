@@ -10,4 +10,8 @@ public class AppUtil {
     public  static String toBase64ProfilePic(byte[] profilePic) {
         return Base64.getEncoder().encodeToString(profilePic);
     }
+
+    public static String createItemId(){
+        return "ITEM-"+ UUID.randomUUID();
+    }
 }
