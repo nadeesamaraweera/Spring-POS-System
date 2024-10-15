@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,14 +38,13 @@ public class OrderServiceIMPL implements OrderService {
         if (orderDTO.getOrderId() == null || orderDTO.getOrderId().isEmpty()) {
             orderDTO.setOrderId(AppUtil.createOrderId());
         }
-        Optional<CustomerEntity> customerOpt = customerDAO.findById(orderDTO.getCustomerId());
-        if (!customerOpt.isPresent()) {
-            throw new RuntimeException("Customer not found with ID: " + orderDTO.getCustomerId());
-        }
-        CustomerEntity customer = customerOpt.get();
+        CustomerEntity customer = customerDAO.findById(orderDTO.getCustomerId())
+                .orElseThrow(() -> {
+                    return new RuntimeException("Customer not found with ID: " + orderDTO.getCustomerId());
+                });
         OrderEntity orderEntity = mapping.convertToOrderEntity(orderDTO);
         orderEntity.setCustomer(customer);
-        orderEntity.setOrderDetails(orderDTO.getOrderDetails().stream().map(orderDetailDTO -> {
+        List<OrderDetailsEntity> orderDetails = orderDTO.getOrderDetails().stream().map(orderDetailDTO -> {
             OrderDetailsEntity orderDetail = new OrderDetailsEntity();
             orderDetail.setOrder(orderEntity);
             Optional<ItemEntity> itemOpt = itemDAO.findById(orderDetailDTO.getItemCode());
@@ -61,17 +61,41 @@ public class OrderServiceIMPL implements OrderService {
             itemDAO.save(item);
             orderDetail.setItem(item);
             //set order detail
+            orderDetail.setItem(item);
             orderDetail.setQuantity(orderDetailDTO.getQuantity());
             orderDetail.setUnitPrice(orderDetailDTO.getUnitPrice());
-            orderDetail.setTotalPrice(orderDetailDTO.getTotalPrice());
+
+            double detailSubtotal = orderDetailDTO.getQuantity() * orderDetailDTO.getUnitPrice();
+            orderDetail.setTotalPrice(detailSubtotal);
             return orderDetail;
-        }).collect(Collectors.toList()));
-        double subTotal = orderEntity.getOrderDetails().stream()
+        }).collect(Collectors.toList());
+        orderEntity.setOrderDetails(orderDetails);
+        double subTotal = orderDetails.stream()
                 .mapToDouble(OrderDetailsEntity::getTotalPrice)
                 .sum();
-        orderEntity.setSubTotal(subTotal);
-        orderEntity.setTotal(subTotal - orderEntity.getDiscountPrice());
+        orderEntity.setTotal(subTotal);
+        double discountPercent = orderDTO.getDiscountPrice();
+        double discountAmount = subTotal * discountPercent / 100;
+        orderEntity.setDiscountPrice(discountAmount);
+        double total = subTotal - discountAmount;
+        orderEntity.setSubTotal(total);
+        double cash = orderDTO.getCash();
+        double balance = cash - total;
+        orderEntity.setBalance(balance);
+
+        if (subTotal > 0 && discountAmount > 0) {
+            for (OrderDetailsEntity detail : orderDetails) {
+                double proportion = detail.getTotalPrice() / subTotal;
+                double detailDiscount = discountAmount * proportion;
+                double finalDetailTotal = detail.getTotalPrice() - detailDiscount;
+                detail.setTotalPrice(finalDetailTotal);
+                        detail.getId(), detail.getTotalPrice() + detailDiscount, finalDetailTotal);
+            }
+        }
+
+
         OrderEntity savedOrder = orderDAO.save(orderEntity);
         return mapping.convertToOrderDTO(savedOrder);
+
     }
 }
