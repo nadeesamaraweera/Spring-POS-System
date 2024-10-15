@@ -1,5 +1,7 @@
 package lk.ijse.springpossystem.service.impl;
 
+import lk.ijse.springpossystem.customObj.CustomerErrorResponse;
+import lk.ijse.springpossystem.customObj.CustomerResponse;
 import lk.ijse.springpossystem.dao.CustomerDAO;
 import lk.ijse.springpossystem.dto.CustomerDTO;
 import lk.ijse.springpossystem.entity.CustomerEntity;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,5 +56,17 @@ public class CustomerServiceIMPL implements CustomerService {
         } else {
             customerDAO.deleteById(customerId);
         }
+    }
+    @Override
+    public CustomerResponse getSelectedCustomer(String customerId) {
+        if(customerDAO.existsById(customerId)){
+            return mapping.convertToCUstomerDTO(customerDAO.getReferenceById(customerId));
+        }else {
+            return new CustomerErrorResponse(0,"Customer not found");
+        }
+    }
+    @Override
+    public List<CustomerDTO> getAllCustomers() {
+        return mapping.convertCustomerListToDTO(customerDAO.findAll());
     }
 }

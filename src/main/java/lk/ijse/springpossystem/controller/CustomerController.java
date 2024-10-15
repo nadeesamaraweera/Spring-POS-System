@@ -1,5 +1,6 @@
 package lk.ijse.springpossystem.controller;
 
+import lk.ijse.springpossystem.customObj.CustomerResponse;
 import lk.ijse.springpossystem.dto.CustomerDTO;
 import lk.ijse.springpossystem.exception.CustomerNotFoundException;
 import lk.ijse.springpossystem.exception.DataPersistFailedException;
@@ -12,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -68,16 +71,15 @@ public class CustomerController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable("id") String customerId) {
-        try {
-            customerService.deleteCustomer(customerId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (CustomerNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CustomerResponse getSelectedCustomer(@PathVariable ("id") String id)  {
+        return customerService.getSelectedCustomer(id);
     }
+
+    @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<CustomerDTO> getAllCustomers(){
+        return customerService.getAllCustomers();
+    }
+
 
 }
