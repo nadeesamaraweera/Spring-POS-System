@@ -8,6 +8,7 @@ import lk.ijse.springpossystem.entity.CustomerEntity;
 import lk.ijse.springpossystem.entity.ItemEntity;
 import lk.ijse.springpossystem.entity.OrderDetailsEntity;
 import lk.ijse.springpossystem.entity.OrderEntity;
+import lk.ijse.springpossystem.exception.InsufficientCashException;
 import lk.ijse.springpossystem.service.OrderService;
 import lk.ijse.springpossystem.util.AppUtil;
 import lk.ijse.springpossystem.util.Mapping;
@@ -112,6 +113,7 @@ public class OrderServiceIMPL implements OrderService {
 
         if (balance < 0) {
             logger.warn("Insufficient cash for the order. Order cannot be placed.");
+            throw new InsufficientCashException("Insufficient cash. Order cannot be placed.");
         }
 
         if (subTotal > 0 && discountAmount > 0) {
