@@ -4,4 +4,6 @@ import lk.ijse.springpossystem.dto.CustomerDTO;
 
 public interface CustomerService {
     void saveCustomer(CustomerDTO customerDTO);
+
+    void updateCustomer(CustomerDTO customerDTO);
 }

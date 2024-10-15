@@ -1,6 +1,7 @@
 package lk.ijse.springpossystem.controller;
 
 import lk.ijse.springpossystem.dto.CustomerDTO;
+import lk.ijse.springpossystem.exception.CustomerNotFoundException;
 import lk.ijse.springpossystem.exception.DataPersistFailedException;
 import lk.ijse.springpossystem.service.CustomerService;
 import lk.ijse.springpossystem.util.AppUtil;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -21,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveCustomer(
             @RequestPart("name") String name,
@@ -43,4 +42,31 @@ public class CustomerController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateCustomer(
+            @PathVariable("id") String id,
+            @RequestPart("updateName") String updateName,
+            @RequestPart("updateAddress") String updateAddress,
+            @RequestPart("updateContact") String updateContact,
+            @RequestPart("updateProfilePic") MultipartFile updateProfilePic
+    ) {
+        try {
+            byte[] imageBytes = updateProfilePic.getBytes();
+            String updateBase64ProfilePic = AppUtil.toBase64ProfilePic(imageBytes);
+            var updateCustomer = new CustomerDTO();
+            updateCustomer.setId(id);
+            updateCustomer.setName(updateName);
+            updateCustomer.setAddress(updateAddress);
+            updateCustomer.setContact(updateContact);
+            updateCustomer.setProfilePic(updateBase64ProfilePic);
+            customerService.updateCustomer(updateCustomer);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomerNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
