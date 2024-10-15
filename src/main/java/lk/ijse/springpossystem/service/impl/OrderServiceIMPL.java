@@ -95,9 +95,9 @@ public class OrderServiceIMPL implements OrderService {
         orderEntity.setTotal(subTotal);
         logger.debug("Calculated subtotal: {}", subTotal);
 
-        double discountPercent = orderDTO.getDiscountPrice();
+        double discountPercent = orderDTO.getDiscount();
         double discountAmount = subTotal * discountPercent / 100;
-        orderEntity.setDiscountPrice(discountAmount);
+        orderEntity.setDiscount(discountAmount);
         logger.debug("Calculated discount amount ({}%): {}", discountPercent, discountAmount);
 
         double total = subTotal - discountAmount;
