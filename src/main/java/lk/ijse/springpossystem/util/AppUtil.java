@@ -14,4 +14,8 @@ public class AppUtil {
     public static String createItemCode(){
         return "ITEM-"+ UUID.randomUUID();
     }
+    public static String createOrderId() {
+        return "ORDER-" + UUID.randomUUID();
+    }
+
 }

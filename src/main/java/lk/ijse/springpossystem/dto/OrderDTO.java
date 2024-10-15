@@ -18,5 +18,5 @@ public class OrderDTO implements SuperDTO {
     private double subTotal;
     private double cash;
     private double balance;
-    private List<ItemDTO> items;
+    private List<OrderDetailsDTO> orderDetails;
 }

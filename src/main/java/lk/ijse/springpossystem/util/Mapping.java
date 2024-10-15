@@ -2,8 +2,10 @@ package lk.ijse.springpossystem.util;
 
 import lk.ijse.springpossystem.dto.CustomerDTO;
 import lk.ijse.springpossystem.dto.ItemDTO;
+import lk.ijse.springpossystem.dto.OrderDTO;
 import lk.ijse.springpossystem.entity.CustomerEntity;
 import lk.ijse.springpossystem.entity.ItemEntity;
+import lk.ijse.springpossystem.entity.OrderEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -40,5 +42,19 @@ public class Mapping {
     }
     public List<ItemDTO> convertItemListToDTO(List<ItemEntity> itemEntities) {
         return modelMapper.map(itemEntities, new TypeToken<List<ItemDTO>>() {}.getType());
+    }
+
+    //Orders  matters mapping
+    public OrderDTO convertToOrderDTO(OrderEntity order) {
+        return modelMapper.map(order, OrderDTO.class);
+    }
+
+    public OrderEntity convertToOrderEntity(OrderDTO dto) {
+        return modelMapper.map(dto, OrderEntity.class);
+    }
+
+    public List<OrderDTO> convertToOrderListDTO(List<OrderEntity> orders) {
+        return modelMapper.map(orders, new TypeToken<List<OrderDTO>>() {
+        }.getType());
     }
 }
