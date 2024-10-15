@@ -71,7 +71,6 @@ public class CustomerController {
                     , HttpStatus.BAD_REQUEST);
         }
 
-
         try {
             if (profilePic == null || profilePic.isEmpty()) {
                 logger.error("Profile picture is missing");
@@ -182,7 +181,6 @@ public class CustomerController {
         }
     }
 
-
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CustomerResponse getSelectedCustomer(@PathVariable ("id") String id)  {
         logger.info("Received request to get selected customer with ID: {}", id);
@@ -210,6 +208,4 @@ public class CustomerController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }

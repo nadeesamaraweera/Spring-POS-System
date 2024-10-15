@@ -78,7 +78,6 @@ public class ItemController {
                     "Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping(value = "/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ItemErrorResponse> updateItem(

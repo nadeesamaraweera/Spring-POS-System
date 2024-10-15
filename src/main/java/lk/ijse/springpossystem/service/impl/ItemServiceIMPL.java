@@ -59,7 +59,6 @@ public class ItemServiceIMPL implements ItemService {
             tmpItemEntity.get().setQty(itemDTO.getQty());
             logger.info("Item updated successfully: {}", code);
         }
-
     }
     @Override
     public void deleteItem(String code) {
@@ -79,10 +78,9 @@ public class ItemServiceIMPL implements ItemService {
             return mapping.convertToItemDTO(itemDAO.getReferenceById(code));
         } else {
             logger.warn("Item not found: {}", code);
-            return new ItemErrorResponse(0, "Item not found");
+            return new ItemErrorResponse("0", "Item not found");
         }
     }
-
     @Override
     public List<ItemDTO> getAllItems() {
         logger.info("Fetching all items");

@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class Mapping {
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -23,11 +24,9 @@ public class Mapping {
     public CustomerEntity convertToCustomerEntity(CustomerDTO customerDTO) {
         return modelMapper.map(customerDTO, CustomerEntity.class);
     }
-
     public CustomerDTO convertToCUstomerDTO(CustomerEntity customerEntity) {
         return modelMapper.map(customerEntity, CustomerDTO.class);
     }
-
     public List<CustomerDTO> convertCustomerListToDTO(List<CustomerEntity> customerEntities) {
         return modelMapper.map(customerEntities, new TypeToken<List<CustomerDTO>>() {
         }.getType());

@@ -14,7 +14,7 @@ public class OrderDTO implements SuperDTO {
     private String customerId;
     private String orderDate;
     private double total;
-    private double discountPrice;
+    private double discount;
     private double subTotal;
     private double cash;
     private double balance;

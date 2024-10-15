@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +36,6 @@ public class OrderServiceIMPL implements OrderService {
     private final ItemDAO itemDAO;
     @Autowired
     private final Mapping mapping;
-
     @Override
     public OrderDTO saveOrder(OrderDTO orderDTO) {
         logger.info("Saving order for customer ID: {}", orderDTO.getCustomerId());
@@ -45,6 +43,7 @@ public class OrderServiceIMPL implements OrderService {
             orderDTO.setOrderId(AppUtil.createOrderId());
             logger.debug("Generated new order ID: {}", orderDTO.getOrderId());
         }
+
         CustomerEntity customer = customerDAO.findById(orderDTO.getCustomerId())
                 .orElseThrow(() -> {
                     logger.error("Customer ID {} not found", orderDTO.getCustomerId());
@@ -59,7 +58,6 @@ public class OrderServiceIMPL implements OrderService {
         List<OrderDetailsEntity> orderDetails = orderDTO.getOrderDetails().stream().map(orderDetailDTO -> {
             OrderDetailsEntity orderDetail = new OrderDetailsEntity();
             orderDetail.setOrder(orderEntity);
-
 
             ItemEntity item = itemDAO.findById(orderDetailDTO.getItemCode())
                     .orElseThrow(() -> {
@@ -127,11 +125,9 @@ public class OrderServiceIMPL implements OrderService {
             }
         }
 
-
         OrderEntity savedOrder = orderDAO.save(orderEntity);
         logger.info("Saved order: {}", savedOrder.getOrderId());
 
         return mapping.convertToOrderDTO(savedOrder);
-
     }
 }

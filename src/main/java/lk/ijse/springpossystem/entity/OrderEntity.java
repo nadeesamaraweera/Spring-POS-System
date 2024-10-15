@@ -21,7 +21,7 @@ public class OrderEntity implements SuperEntity {
     private CustomerEntity customer;
     private String orderDate;
     private double total;
-    private double discountPrice;
+    private double discount;
     private double subTotal;
     private double cash;
     private double balance;
